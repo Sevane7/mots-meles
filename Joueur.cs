@@ -54,5 +54,8 @@ namespace Mots_Meles
         {
             return Scores + val;
         }
+
+
+        bite
     }   
 }
