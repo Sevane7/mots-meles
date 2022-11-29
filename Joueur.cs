@@ -47,19 +47,12 @@ namespace Mots_Meles
                 if (i == Mots_trouves.Length - 1) { res += Mots_trouves[i] + "."; }
                 else { res += Mots_trouves[i] + ", "; }
             }
-            res += "\n" + "son score est de " + Scores;
+            res += "\n" + "Son score est de " + Scores;
             return res;
         }
         public int Add_Score(int val)
         {
             return Scores + val;
         }
-
-
-<<<<<<< HEAD
-        bite de nico
-=======
-        la bite de sev
->>>>>>> a41a8f97c4a95d2274aec6a1b8b60726dea64328
     }   
 }
