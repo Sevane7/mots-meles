@@ -16,6 +16,7 @@ namespace Mots_Meles
         private int ligne;       // nombre de ligne par grille
         private int mot;         // nombre de mot par grille
         private string[] mot_a_trouver;
+        private Excel ex;
         public Plateau(int difficult, bool existe, int colonne, int ligne, int mot)
         {
             this.difficult = difficult;
