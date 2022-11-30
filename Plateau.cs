@@ -42,7 +42,12 @@ namespace Mots_Meles
         }
         public void CreationPlateau()
         {
-
+            switch(this.difficult)
+            {
+                case == 1:
+                    ex.CreateNewFile()
+                    break;
+            }
         }
 
         //public bool Test_Plateau a besoin de public bool lettre_suivante.

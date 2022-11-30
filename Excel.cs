@@ -53,7 +53,7 @@ namespace Mots_Meles
         }
         public string [,] WriteReange(int first_i, int last_i, int first_j, int last_j, string[,] writestring)
         {
-            Range range = (Ranges)ws.Range[ws.Cells[first_i, last_i], ws.Cells[first_j, last_j]];
+            Ranges range = (Ranges)ws.Range[ws.Cells[first_i, last_i], ws.Cells[first_j, last_j]];  // instancie un range (tableau Excel)
             string[,] holder = range.Value2;
             string[,] returnstring = new string[last_i - first_i, last_j - first_j];
             for(int i = 1; i<=last_i - first_i; i++)

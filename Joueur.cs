@@ -11,13 +11,15 @@ namespace Mots_Meles
     {
         //attributs
         private string nom;
-        private string [] mots_trouves; //taille?
-        private int scores; //scores par plateau??
-        public Joueur(string nom, string[] mots_trouves, int scores)
+        private string [] mots_trouves; // taille?
+        private int scores;             // score du joueur 
+        private double chrono;          // chrono total du joueur
+        public Joueur(string nom, string[] mots_trouves, int scores, double chrono)
         {
             this.nom = nom;
             this.mots_trouves = mots_trouves;
             this.scores = scores;
+            this.chrono = chrono;
         }
         public string [] Mots_trouves
         {
@@ -28,6 +30,11 @@ namespace Mots_Meles
         {
             get { return this.scores; }
             set { this.scores = value; }
+        }
+        public double Chrono
+        {
+            get { return this.chrono; }
+            set { this.chrono = value; }
         }
         public string [] Add_mot(string mot)
         {
@@ -53,6 +60,10 @@ namespace Mots_Meles
         public int Add_Score(int val)
         {
             return Scores + val;
+        }
+        public double Add_chrono(double val)
+        {
+            return Chrono + val;
         }
     }   
 }
