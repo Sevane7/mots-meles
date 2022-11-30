@@ -46,11 +46,17 @@ namespace Mots_Meles
             string[,] plateau = null;
             switch(difficulty)
             {
-                case 1:         // difficulté 1 : plateau de taille 7 x 6
+                case 1:                             // difficulté 1 : plateau de taille 7 x 6
                     plateau = new string[7, 6]; 
                     for(int i = 0; i< 7;i++)
                     {
+                        for(int j = 0; j<6; j++)
+                        {
+                            if (plateau[i, j] == "")
+                            {
 
+                            }
+                        }
                     }
                     break;
             }
