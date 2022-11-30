@@ -21,6 +21,7 @@ namespace Mots_Meles
             this.scores = scores;
             this.chrono = chrono;
         }
+        public string Nom { get { return nom; } }
         public string [] Mots_trouves
         {
             get { return this.mots_trouves; }
