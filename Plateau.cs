@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Mots_Meles
 {
@@ -40,14 +41,20 @@ namespace Mots_Meles
             }
             catch (Exception ex) { Console.WriteLine(ex); }
         }
-        public void CreationPlateau()
+        public string [,] Remplissage(int difficulty)
         {
-            switch(this.difficult)
+            string[,] plateau = null;
+            switch(difficulty)
             {
-                case == 1:
-                    ex.CreateNewFile()
+                case 1:         // difficulté 1 : plateau de taille 7 x 6
+                    plateau = new string[7, 6]; 
+                    for(int i = 0; i< 7;i++)
+                    {
+
+                    }
                     break;
             }
+            return plateau;
         }
 
         //public bool Test_Plateau a besoin de public bool lettre_suivante.

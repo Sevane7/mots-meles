@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Excel = Microsoft.Office.Interop.Excel;
+using Range = Microsoft.Office.Interop.Excel.Range;
 using System.Reflection;
 using Microsoft.Office.Interop.Excel;
 
@@ -16,7 +17,6 @@ namespace Mots_Meles
         Application excel;
         Worksheet ws;
         private int sheet;
-
         public Excel(string path, Application excel, Workbook wb, Worksheet ws, int sheet)
         {
             this.path = path;
@@ -51,19 +51,24 @@ namespace Mots_Meles
         {
             this.wb = excel.Workbooks.Add(XlWBATemplate.xlWBATWorksheet); 
         }
-        public string [,] WriteReange(int first_i, int last_i, int first_j, int last_j, string[,] writestring)
+        public string [,] ReadRange(int first_i, int last_i, int first_j, int last_j)
         {
-            Ranges range = (Ranges)ws.Range[ws.Cells[first_i, last_i], ws.Cells[first_j, last_j]];  // instancie un range (tableau Excel)
-            string[,] holder = range.Value2;
-            string[,] returnstring = new string[last_i - first_i, last_j - first_j];
+            Range range = (Range)ws.Range[ws.Cells[first_i, first_j], ws.Cells[last_i, last_j]];  // instancie un range (tableau Excel)
+            string [,] holder = range.Value;
+            string [,] returnstring = new string[last_i - first_i + 1, last_j - first_j + 1];
             for(int i = 1; i<=last_i - first_i; i++)
             {
                 for(int j = 1; j<=last_j - first_j; j++)
                 {
-                    returnstring[i - 1, j - 1] = holder[i, j];
+                    returnstring[i - 1, j - 1] = holder[i, j].ToString();
                 }
             }
             return returnstring;
+        }
+        public void WriteString(int first_i, int last_i, int first_j, int last_j, string[,] writestring)
+        {
+            Range range = (Range)ws.Range[ws.Cells[first_i, first_j], ws.Cells[last_i, last_j]];
+            range.Value = writestring;
         }
     }
 }
