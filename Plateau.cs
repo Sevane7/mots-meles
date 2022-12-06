@@ -31,6 +31,34 @@ namespace Mots_Meles
         public int Colonne { get { return this.colonne; } }
         public int Ligne { get { return this.ligne; } }
         public int Mot { get { return this.mot; } }
+        public string[,] ChoixMots(int difficult)
+        {
+            switch(difficult)
+            {
+                case 1
+                Random aleatoire = new Random();
+                for (int i=0; i<8; i++)
+                {
+                    int tabMot = aleatoire.Next(2,6); //choix aléatoire d un nombre de lettres
+                    int index = aleatoire.Next(0, Dico(tabMot).Length); //choix aléatoire des mots par leur index
+                    return Dico(tabMot)[index];
+                }
+
+                break;
+                case difficult==2
+                for (int i=0; i<13; i++)
+                {
+                    int tabMot = aleatoire.Next(2,8);
+                    int index = aleatoire.Next(0,Dico(tabMot).Length);
+                    return Dico(tabMot)[index];
+                }
+
+            }
+        }
+        public string[,] ReplissageMot()   //récupérer le tableau de mots aléatoire et l'utiliser pour remplir la grille
+        {
+
+        }
         public string[,] Remplissage()
         {
             Random random = new Random();
