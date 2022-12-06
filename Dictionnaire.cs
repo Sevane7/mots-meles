@@ -17,6 +17,39 @@ namespace Mots_Meles
             ReadFile(filename);
         }
         /// <summary>
+        /// rempli le [][]mots avec le fichier
+        /// </summary>
+        /// <param name="filename"></param>
+        public void ReadFile(string filename)
+        {
+            try
+            {
+                string[] lines = File.ReadAllLines(filename);
+                this.mots = new string[lines.Length / 2][];
+                /* Explication boucle : 
+                    On part de la ligner 1 du fichier 
+                    On incrémente de 2 l'index car le fichier est tel que les numéros sont sur les lignes impaires
+                    donc i a valeurs 1 à 28 
+                    et i / 2 a valeurs 0 à 14
+                    on rempli mots[i/2] avec toutes les valeurs des lignes paires qu'on split avec un espace
+                 */
+                for (int i = 1; i < lines.Length; i += 2)
+                {
+                    mots[i / 2] = lines[i].Split(' ');
+                }
+            }
+            catch (IOException e)
+            {
+                mots = null;
+                Console.WriteLine(e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
         /// Retourne le nombre de mots du dictionnaire
         /// </summary>
         /// <returns></returns>
@@ -29,36 +62,54 @@ namespace Mots_Meles
             }
             return n;
         }
-        public string Langue { get { return this.langue; } }
-
 
         /// <summary>
-        /// Ca retourne quoi ca
+        /// Retourne le nombre de mots d'un tableau_i
+        /// </summary>
+        /// <returns></returns>
+        public int NombreMotsTab(int tableau_i)
+        {
+           return this.mots[tableau_i].Length;
+        }
+
+        /// <summary>
+        /// Propriété en lecture de la langue
+        /// </summary>
+        public string Langue { get { return this.langue; } }   
+
+        /// <summary>
+        /// Propriétés en lecture et en écriture
+        /// </summary>
+        public string[][] Mots 
+        { 
+            get { return mots; }
+            set { mots = value; }
+        }
+
+        /// <summary>
+        ///Retourne le nombre de mots par longueur en français.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            string res = "";
-
+            string res = "En français : \n";
+            for(int i = 0; i < this.mots.Length; i++)
+            {
+                res += $"Il y a {this.mots[i].Length} mots de taille {i + 2}. \n";
+            }
             return res;
         }
-
 
         /// <summary>
         /// Affiche tous les mots du [][] mots
         /// </summary>
-        public void AfficherTousMots()
+        public void AfficherTousMots(int tableau_i)
         {
-            for (int i = 0; i < this.mots.Length; i++)
+            for (int i = 0; i < Mots[tableau_i - 2].Length; i++)
             {
-                for (int j = 0; j < this.mots[i].Length; j++)
-                {
-                    Console.Write(this.mots[i][j] + " ");
-                    if (j == this.mots[i].Length - 1) { Console.Write(this.mots[i][j] + ".\n"); }
-                }
+                Console.Write(Mots[tableau_i - 2][i].ToString() + " ");
             }
         }
-
 
         /// <summary>
         ///Retourne l'index du mot cherché 
@@ -69,42 +120,13 @@ namespace Mots_Meles
         /// <param name="index_fin"></param>
         /// <param name="milieu"></param>
         /// <returns></returns>
-        public bool RechDichRecursif(string mot, int index_deb, int index_fin, int milieu)   //tab depend de la longueur (si longueur = 9, tab contient tous les mots de longueur 9)
+        public bool RechDichRecursif(string mot, int index_deb, int index_fin, int milieu)   
         {
             int len = milieu + (index_fin - index_deb) / 2;
             if (len >= index_fin) { return false; }                                                        // le mots n'est pas dans tab
             if (this.mots[mot.Length - 2][len] == mot) { return true; }                                                          //condition d'arrêt si mot est dans le tableau 
             if (mot.CompareTo(this.mots[mot.Length - 2][len]) < 0) { return RechDichRecursif(mot, index_deb, len, len); }
             else { return RechDichRecursif(mot, len + 1, index_fin, len + 1); }
-        }
-        public void ReadFile(string filename)
-        {
-            this.mots = null;
-            int count = 0;
-            try
-            {
-                var sr = new StreamReader(filename);
-                string fichier = sr.ReadToEnd();                                 // Lis tous les éléments d'un fichier
-                string[] AllLines = new string[14];
-                for(int i = 0; i < 14; i++)
-                {
-                    string after = fichier.Split((i + 2).ToString() + "\n")[1]; // stocke tous les éléments après le split du premier nombre/chiffre 
-                    AllLines[i] = after.Split((i + 3).ToString())[0];           // stocke tous les éléments du 2eme bloc : avant le nombre/chiffre suivant
-                                                                                // [0] : premier bloc du .Split; [1] : deuxième
-                }
-
-                this.mots = new string[AllLines.Length][];
-
-                for(int i = 0; i < AllLines.Length; i ++)                       // pour trouver Length de res
-                {
-                    this.mots[i] = AllLines[i].Split(' ');
-                }
-                Console.WriteLine(this.mots.Length);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
         }
     }
 }

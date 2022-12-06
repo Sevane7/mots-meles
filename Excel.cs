@@ -14,7 +14,7 @@ namespace Mots_Meles
     {
         string path = "";
         Workbook wb;
-        Application excel;       // ça sert à quoi?
+        Application excel;
         Worksheet ws;            
         private int sheet;       // autant de sheets que de joueur
         private int difficulty;

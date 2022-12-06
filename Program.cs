@@ -11,8 +11,11 @@ namespace Mots_Meles
         {
             Dictionnaire dico = new Dictionnaire("francais", "MotsPossiblesFR.txt");
             
-            dico.AfficherTousMots();
+            Console.Write(dico.ToString());
 
+
+
+            Console.WriteLine("Press a key to close the console.");
             Console.ReadKey();
         }
         
