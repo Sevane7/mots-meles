@@ -66,9 +66,9 @@ namespace Mots_Meles
         public string ToString()
         {
             string res = this.nom + " a trouvé les mots : ";
-            for(int i = 0; i< Mots_trouves.Length; i++)
+            for(int i = 0; i< Mots_trouves.Count; i++)
             {
-                if (i == Mots_trouves.Length - 1) { res += Mots_trouves[i] + "."; }
+                if (i == Mots_trouves.Count - 1) { res += Mots_trouves[i] + "."; }
                 else { res += Mots_trouves[i] + ", "; }
             }
             res += "\n" + "Son score est de " + Scores;

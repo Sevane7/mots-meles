@@ -10,8 +10,13 @@ namespace Mots_Meles
         static void Main(string[] args)
         {
             Dictionnaire dico = new Dictionnaire("francais", "MotsPossiblesFR.txt");
+            Plateau plateau = new Plateau(1, true, 6, 7, 8);
+            for(int i = 0; i<plateau.ChoixMots(dico).Count; i++)
+            {
+                Console.WriteLine(plateau.ChoixMots(dico)[i]);
+            }
+
             
-            dico.AfficherTousMots(5);
 
 
 
