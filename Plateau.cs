@@ -31,34 +31,32 @@ namespace Mots_Meles
         public int Colonne { get { return this.colonne; } }
         public int Ligne { get { return this.ligne; } }
         public int Mot { get { return this.mot; } }
-        public void ToFile(string filename)
+        public string[,] Remplissage()
         {
-            try
-            {
-                StreamWriter sw = new StreamWriter(filename);
-
-
-            }
-            catch (Exception ex) { Console.WriteLine(ex); }
-        }
-        public string [,] Remplissage(int difficulty)
-        {
+            Random random = new Random();
+            char[] alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                                  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'  };
             string[,] plateau = null;
-            switch(difficulty)
-            {
-                case 1:                             // difficulté 1 : plateau de taille 7 x 6
-                    plateau = new string[7, 6]; 
-                    for(int i = 0; i< 7;i++)
-                    {
-                        for(int j = 0; j<6; j++)
-                        {
-                            if (plateau[i, j] == "")
-                            {
 
-                            }
+            //teste toutes les difficultés
+            for (int i = 1; i < 6; i++) 
+            {
+                // pour la difficultée actuelle
+                if (i == this.difficult) 
+                {
+                    //instancie le plateau avec les bonnes dimensions
+                    plateau = new string[3 + 5 * i, 1 + 5 * i]; 
+
+
+                    //parcours le plateau et rempli les cases vides avec des lettre aléatoires
+                    for (int k = 0; k < 7; i++)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            if (plateau[k, j] == "") { plateau[k, j] = alphabet[random.Next(0, 27)].ToString(); }
                         }
                     }
-                    break;
+                }
             }
             return plateau;
         }

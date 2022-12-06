@@ -11,7 +11,7 @@ namespace Mots_Meles
         {
             Dictionnaire dico = new Dictionnaire("francais", "MotsPossiblesFR.txt");
             
-            Console.Write(dico.ToString());
+            dico.AfficherTousMots(5);
 
 
 
