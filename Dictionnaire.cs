@@ -120,7 +120,7 @@ namespace Mots_Meles
         /// <param name="index_fin"></param>
         /// <param name="milieu"></param>
         /// <returns></returns>
-        public bool RechDichRecursif(string mot, int index_deb, int index_fin, int milieu)   
+        public bool RechDichRecursif(string mot, int index_deb, int index_fin, int milieu)
         {
             int len = milieu + (index_fin - index_deb) / 2;
             if (len >= index_fin) { return false; }                                                        // le mots n'est pas dans tab

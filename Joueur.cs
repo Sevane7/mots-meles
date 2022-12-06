@@ -11,42 +11,58 @@ namespace Mots_Meles
     {
         //attributs
         private string nom;
-        private string [] mots_trouves; // taille?
+        private List <string> mots_trouves;
         private int scores;             // score du joueur 
         private double chrono;          // chrono total du joueur
-        public Joueur(string nom, string[] mots_trouves, int scores, double chrono)
+        public Joueur(string nom, List <string> mots_trouves, int scores, double chrono)
         {
             this.nom = nom;
             this.mots_trouves = mots_trouves;
             this.scores = scores;
             this.chrono = chrono;
         }
+
+        /// <summary>
+        /// Proprtiété du nom
+        /// </summary>
         public string Nom { get { return nom; } }
-        public string [] Mots_trouves
+
+        /// <summary>
+        /// Proprtiété des mots trouvés
+        /// </summary>
+        public List <string >Mots_trouves
         {
             get { return this.mots_trouves; }
-            set { this.mots_trouves = value; } //sans doute inutile
-        } 
+            set { this.mots_trouves = value; } 
+        }
+
+        /// <summary>
+        /// Proprtiété du score
+        /// </summary>
         public int Scores
         {
             get { return this.scores; }
             set { this.scores = value; }
         }
+
+        /// <summary>
+        /// Proprtiété du chrono
+        /// </summary>
         public double Chrono
         {
             get { return this.chrono; }
             set { this.chrono = value; }
         }
-        public string [] Add_mot(string mot)
+
+
+        /// <summary>
+        /// Ajoute le mot trouvé à la liste des mots déjà trouvés.
+        /// </summary>
+        /// <param name="mot"></param>
+        public void Add_mot(string mot)
         {
-            string[] add = new string[Mots_trouves.Length + 1];
-            for(int i = 0; i < add.Length - 1; i++)
-            {
-                add[i] = Mots_trouves[i];
-            }
-            add[add.Length - 1] = mot;
-            return add;
-        } //retourne la liste des mots trouvés
+            Mots_trouves.Add(mot);
+        } 
         public string ToString()
         {
             string res = this.nom + " a trouvé les mots : ";
