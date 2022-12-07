@@ -17,7 +17,7 @@ namespace Mots_Meles
         private int colonne;     // nombre de colonne par grille
         private int ligne;       // nombre de ligne par grille
         private int mot;         // nombre de mot par grille
-        Dictionnaire Dico;
+        private Dictionnaire Dico;
         private Excel ex;
         public Plateau(int difficult, bool existe, int colonne, int ligne, int mot, Dictionnaire Dico)
         {
@@ -40,16 +40,16 @@ namespace Mots_Meles
 
 
         /// <summary>
-        /// Retourne une matrice vide (tous les élements sont des "")
+        /// Retourne une matrice vide (tous les élements sont des ' ')
         /// 
         /// </summary>
         /// <returns></returns>
-        public string[,] CrationMatrice()
+        public char[,] CrationMatrice()
         {
-            string[,] mat = new string[Ligne, Colonne];
+            char[,] mat = new char[Ligne, Colonne];
             for(int i = 0; i < Ligne; i++)
             {
-                for(int j = 0; j < Colonne; j++) { mat[i, j] = ""; }
+                for(int j = 0; j < Colonne; j++) { mat[i, j] = ' '; }
             }
             return mat;
         }
@@ -79,20 +79,48 @@ namespace Mots_Meles
 
         /// <summary>
         /// Retourne un bool
-        /// Vrai si le point d'ancrage du mot à trouver bon, faux sinon
-        /// Prend en paramètre un string et 3 int : direction, positions x et y
+        /// Vrai si le point d'ancrage est possible
+        /// Possible si toutes les cases suivantes selon la direction sont valides
+        /// Valides si soit ' ' soit lettre en commun
+        /// Prend en paramètre un string, un char [,] et 3 int (direction, positions x et position y)
         /// </summary>
         /// <param name="word"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public bool PointDAncrage(string word, int direction, int x, int y)
+        public bool PointDAncrage(string word, int direction, int x, int y, char [,] plateau)
         {
             bool res = false;
+            // Pour les deux premières difficultés:
             if(Difficult == 1 || Difficult == 2)
             {
-                if(direction == 0 && word.Length < Colonne - y) { res = true; }
-                if(direction == 1 && word.Length < Ligne - x) { res = true; }
+                //Si le mot à la place pour être à l'horizontale:
+                if(direction == 0 && word.Length < Colonne - y + 1) 
+                {
+                    /*Res = true si toutes les cases suivantes sont valables :
+                      - case vide 
+                      - caractère en commun / caractère d'intersection */
+                    for (int i = 0; i < word.Length; i++)
+                    {
+                        if (word[i] == plateau[x, y + i] || plateau[x, y + i] == ' ')
+                        {
+                            res = true;
+                        }
+                        else { return false; }
+                    }
+                }
+                // Pareil pour la verticale
+                if(direction == 1 && word.Length < Ligne - x + 1)
+                {
+                    for (int i = 0; i < word.Length; i++)
+                    {
+                        if (word[i] == plateau[x + i, y] || plateau[x + i, y] == ' ')
+                        {
+                            res = true;
+                        }
+                        else { return false; }
+                    }
+                }
             }
             return res;
         }
@@ -100,29 +128,37 @@ namespace Mots_Meles
         /// <summary>
         /// Retourne une matrice 2D
         /// récupérer la liste de mots aléatoire 
-        /// Utilisée pour remplir la grille
+        /// Utilisée pour remplir la grille avec les mots à trouver
         /// </summary>
         /// <returns></returns>
-        public string[,] ReplissageMotATrouver()
+        public char[,] RemplissageMotATrouver()
         {
-            string[,] res = null;
-            List<string> choixMots = ChoixMots();
+            char[,] plateau = this.CrationMatrice();
+            List<string> choixMots = this.ChoixMots();
             Random r = new Random();
+            int counter = 0; // sera décrémenter jusqu'à 0
 
             switch (Difficult)
             {
                 case 1:
                     {
-                        foreach (string word in choixMots)
+                        while(counter < choixMots.Count)
                         {
+                            string word = choixMots[counter];
                             int direction = r.Next(0, 2); //2 directions : (E,S):(0,1)
                             int position_x = r.Next(0, Ligne);
                             int position_y = r.Next(0, Colonne);
-                            if(PointDAncrage(word, direction, position_x, position_y))
+                            if (PointDAncrage(word, direction, position_x, position_y, plateau))
                             {
-
+                                for (int i = 0; i < word.Length; i++)
+                                {
+                                    if (direction == 0) { plateau[position_x, position_y + i] = word[i]; } //rempli une ligne du plateau
+                                    else { plateau[position_x + i, position_y] = word[i]; }                //rempli une colonne du plateau
+                                }
                             }
-                        }                      
+                            counter++;
+                            // belec au cas où ya pas de place 
+                        }                    
                         break;
                     }
                 case 2:
@@ -130,38 +166,45 @@ namespace Mots_Meles
                         break;
                     }
             }
+            return plateau;
+        }
+
+        /// <summary>
+        /// Remplie une matrice avec des lettres aléatoires
+        /// </summary>
+        /// <returns></returns>
+        public char [,] Remplissage()
+        {
+            char[,] res = this.RemplissageMotATrouver();
+            Random random = new Random();
+            char[] alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                                  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'  };
+
+            //parcours le plateau et rempli les cases vides avec des lettre aléatoires
+            for (int k = 0; k < res.GetLength(0); k++)
+            {
+                for (int j = 0; j < res.GetLength(1); j++)
+                {
+                    if (res[k, j] == ' ') { res[k, j] = alphabet[random.Next(0, 26)]; }
+                }
+            }
             return res;
         }
 
         /// <summary>
-        /// retourne une matrice 2D
-        /// remplie une matrice avec des lettres aléatoires
+        /// Affiche la matrice retournée par Remplissage()
         /// </summary>
-        /// <returns></returns>
-        public string[,] RemplissageChar(string[,] A_remplir)
+        /// <param name="afficher"></param>
+        public void Affichage(char[,] afficher)
         {
-            Random random = new Random();
-            char[] alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-                                  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'  };
-            string[,] plateau = new string [A_remplir.GetLength(0),A_remplir.GetLength(1)];
-
-            //teste toutes les difficultés
-            for (int i = 1; i < 6; i++) 
+            for(int i = 0; i < afficher.GetLength(0); i++)
             {
-                // pour la difficultée actuelle
-                if (i == Difficult) 
+                for(int j = 0; j < afficher.GetLength(1); j++)
                 {
-                    //parcours le plateau et rempli les cases vides avec des lettre aléatoires
-                    for (int k = 0; k < 7; i++) //belec
-                    {
-                        for (int j = 0; j < 6; j++) //belec
-                        {
-                            if (plateau[k, j] == "") { plateau[k, j] = alphabet[random.Next(0, 27)].ToString(); }
-                        }
-                    }
+                    Console.Write(afficher[i, j] + " ");
                 }
+                Console.WriteLine();
             }
-            return plateau;
         }
 
         //public bool Test_Plateau a besoin de public bool lettre_suivante.

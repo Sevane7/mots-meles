@@ -54,7 +54,6 @@ namespace Mots_Meles
             set { this.chrono = value; }
         }
 
-
         /// <summary>
         /// Ajoute le mot trouvé à la liste des mots déjà trouvés.
         /// </summary>

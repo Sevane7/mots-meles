@@ -13,10 +13,12 @@ namespace Mots_Meles
             Plateau plateau = new Plateau(1, true, 6, 7, 8, dico);
             for(int i = 0; i<plateau.ChoixMots().Count; i++)
             {
-                Console.WriteLine(plateau.ChoixMots()[i]);
+                Console.Write(plateau.ChoixMots()[i] + " ");
             }
+            Console.WriteLine();
 
-            
+            char[,] test = plateau.Remplissage();
+            plateau.Affichage(test);
 
 
 
