@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Mots_Meles
 {
@@ -16,14 +17,16 @@ namespace Mots_Meles
         private int colonne;     // nombre de colonne par grille
         private int ligne;       // nombre de ligne par grille
         private int mot;         // nombre de mot par grille
+        Dictionnaire Dico;
         private Excel ex;
-        public Plateau(int difficult, bool existe, int colonne, int ligne, int mot)
+        public Plateau(int difficult, bool existe, int colonne, int ligne, int mot, Dictionnaire Dico)
         {
             this.difficult = difficult;
             this.existe = existe;
             this.colonne = colonne;
             this.ligne = ligne;
             this.mot = mot;
+            this.Dico = Dico;
         }
         public int Difficult 
         {
@@ -35,12 +38,28 @@ namespace Mots_Meles
         public int Ligne { get { return this.ligne; } }
         public int Mot { get { return this.mot; } }
 
+
+        /// <summary>
+        /// Retourne une matrice vide (tous les élements sont des "")
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string[,] CrationMatrice()
+        {
+            string[,] mat = new string[Ligne, Colonne];
+            for(int i = 0; i < Ligne; i++)
+            {
+                for(int j = 0; j < Colonne; j++) { mat[i, j] = ""; }
+            }
+            return mat;
+        }
+
         /// <summary>
         /// Retourne la liste de mots à trouver
         /// </summary>
         /// <param name="Dico"></param>
         /// <returns></returns>
-        public List <string> ChoixMots(Dictionnaire Dico) 
+        public List <string> ChoixMots() 
         {
             List<string> WordsToFind = new List<string> { };
             Random aleatoire = new Random();
@@ -58,21 +77,22 @@ namespace Mots_Meles
             return WordsToFind;
         }
 
-
         /// <summary>
         /// Retourne un bool
-        /// 
+        /// Vrai si le point d'ancrage du mot à trouver bon, faux sinon
+        /// Prend en paramètre un string et 3 int : direction, positions x et y
         /// </summary>
         /// <param name="word"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public bool PointDAncrage(string word, int x, int y)
+        public bool PointDAncrage(string word, int direction, int x, int y)
         {
             bool res = false;
-            if(Difficult== 1 || Difficult == 2)
+            if(Difficult == 1 || Difficult == 2)
             {
-                if(word.Length <= x || word.Length <= y) { res = true; }
+                if(direction == 0 && word.Length < Colonne - y) { res = true; }
+                if(direction == 1 && word.Length < Ligne - x) { res = true; }
             }
             return res;
         }
@@ -86,25 +106,30 @@ namespace Mots_Meles
         public string[,] ReplissageMotATrouver()
         {
             string[,] res = null;
-            Random direction = new Random();
+            List<string> choixMots = ChoixMots();
+            Random r = new Random();
 
             switch (Difficult)
             {
                 case 1:
                     {
-                        for (int i =0; i<13;i++)
-                        direction.Next(0,2); //2 directions : (E,S):(0,1)
+                        foreach (string word in choixMots)
+                        {
+                            int direction = r.Next(0, 2); //2 directions : (E,S):(0,1)
+                            int position_x = r.Next(0, Ligne);
+                            int position_y = r.Next(0, Colonne);
+                            if(PointDAncrage(word, direction, position_x, position_y))
+                            {
+
+                            }
+                        }                      
                         break;
                     }
                 case 2:
                     {
-                        direction.Next(0, 5); //4 directions : (E, S, O, N) = (0,1, 2, 3)
                         break;
                     }
             }
-
-
-
             return res;
         }
 
