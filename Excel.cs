@@ -18,13 +18,15 @@ namespace Mots_Meles
         Worksheet ws;            
         private int sheet;       // autant de sheets que de joueur
         private int difficulty;
-        public Excel(string path, Application excel, Workbook wb, Worksheet ws, int sheet, int difficulty)
+        Plateau plateau;
+        public Excel(string path, Application excel, Workbook wb, Worksheet ws, int sheet, int difficulty, Plateau plateau)
         {
             this.path = path;
             this.excel = excel;
             wb = excel.Workbooks.Open(path);
             ws = excel.Worksheets[sheet];
             this.difficulty = difficulty;   
+            this.plateau = plateau;
         }
 
 
@@ -121,7 +123,7 @@ namespace Mots_Meles
         /// <param name="first_j"></param>
         /// <param name="last_j"></param>
         /// <param name="writestring"></param>
-        public void WriteString(int first_i, int last_i, int first_j, int last_j, string[,] writestring)
+        public void WriteString(int first_i, int last_i, int first_j, int last_j, char[,] writestring)
         {
             Range range = ws.Range[ws.Cells[first_i, first_j], ws.Cells[last_i, last_j]];
             range.Value = writestring;

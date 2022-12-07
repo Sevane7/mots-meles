@@ -12,39 +12,52 @@ namespace Mots_Meles
 {
     internal class Plateau
     {
-        private int difficult;   // niveau de difficulté
-        private bool existe;     // true si dans le dictionnaire
-        private int colonne;     // nombre de colonne par grille
-        private int ligne;       // nombre de ligne par grille
-        private int mot;         // nombre de mot par grille
+        private int difficult;
+        private int colonne;
+        private int ligne;
+        private List<string> motsATrouver;
         private Dictionnaire Dico;
         private Excel ex;
-        public Plateau(int difficult, bool existe, int colonne, int ligne, int mot, Dictionnaire Dico)
+
+        //Constructeur
+        public Plateau(int difficult, int colonne, int ligne, Dictionnaire Dico)
         {
             this.difficult = difficult;
-            this.existe = existe;
             this.colonne = colonne;
             this.ligne = ligne;
-            this.mot = mot;
             this.Dico = Dico;
+            this.motsATrouver = ChoixMots();
         }
+
+        /// <summary>
+        /// Propriété en lecture de Mot A Trouver
+        /// </summary>
+        public List <string> MotsATrouver { get { return this.motsATrouver; } }
+
+        /// <summary>
+        /// Propriété en lecture de la difficulté
+        /// </summary>
         public int Difficult 
         {
             get { return this.difficult; }
-            set { this.difficult = value;  }
         }
-        public bool Existe { get { return this.existe; } }
-        public int Colonne { get { return this.colonne; } }
-        public int Ligne { get { return this.ligne; } }
-        public int Mot { get { return this.mot; } }
 
+        /// <summary>
+        /// Propriété 
+        /// </summary>
+        public int Colonne { get { return this.colonne; } }
+
+        /// <summary>
+        /// Propriété en Lecture du nombre de colonne
+        /// </summary>
+        public int Ligne { get { return this.ligne; } }
 
         /// <summary>
         /// Retourne une matrice vide (tous les élements sont des ' ')
         /// 
         /// </summary>
         /// <returns></returns>
-        public char[,] CrationMatrice()
+        public char[,] CreationMatrice()
         {
             char[,] mat = new char[Ligne, Colonne];
             for(int i = 0; i < Ligne; i++)
@@ -64,11 +77,11 @@ namespace Mots_Meles
             List<string> WordsToFind = new List<string> { };
             Random aleatoire = new Random();
 
-            for (int i = 0; i < 9 + 5 * (Difficult - 1); i++)
+            for (int i = 0; i < 8 + 5 * (Difficult - 1); i++)
             {
                     if (Difficult == 1 || Difficult == 2)
                     {
-                        int tabMot = aleatoire.Next(0, Ligne + 1);                      //autant de lettres possibles que de lignes 
+                        int tabMot = aleatoire.Next(2, Ligne - 3);                  //autant de lettres possibles que de lignes 
                         int index = aleatoire.Next(0, Dico.Mots[tabMot].Length);    //choisi un index aléatoire dans le tabMot
                         WordsToFind.Add(Dico.Mots[tabMot][index]);                  //l'ajoute à la liste 
                     }
@@ -133,18 +146,18 @@ namespace Mots_Meles
         /// <returns></returns>
         public char[,] RemplissageMotATrouver()
         {
-            char[,] plateau = this.CrationMatrice();
-            List<string> choixMots = this.ChoixMots();
+            char[,] plateau = this.CreationMatrice();
             Random r = new Random();
-            int counter = 0; // sera décrémenter jusqu'à 0
+            int counter = 0; 
 
             switch (Difficult)
             {
                 case 1:
                     {
-                        while(counter < choixMots.Count)
+                        while(counter < MotsATrouver.Count)
                         {
-                            string word = choixMots[counter];
+                            int itteration = 0;
+                            string word = MotsATrouver[counter];
                             int direction = r.Next(0, 2); //2 directions : (E,S):(0,1)
                             int position_x = r.Next(0, Ligne);
                             int position_y = r.Next(0, Colonne);
@@ -155,9 +168,14 @@ namespace Mots_Meles
                                     if (direction == 0) { plateau[position_x, position_y + i] = word[i]; } //rempli une ligne du plateau
                                     else { plateau[position_x + i, position_y] = word[i]; }                //rempli une colonne du plateau
                                 }
+                                counter++;
                             }
-                            counter++;
-                            // belec au cas où ya pas de place 
+                            itteration++;
+                            if(itteration > 10000)
+                            {
+                                plateau = CreationMatrice();
+                                counter= 0;
+                            }
                         }                    
                         break;
                     }
