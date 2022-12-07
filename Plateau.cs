@@ -17,7 +17,6 @@ namespace Mots_Meles
         private int ligne;
         private List<string> motsATrouver;
         private Dictionnaire Dico;
-        private Excel ex;
 
         //Constructeur
         public Plateau(int difficult, int colonne, int ligne, Dictionnaire Dico)

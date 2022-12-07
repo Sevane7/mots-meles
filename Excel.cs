@@ -46,7 +46,6 @@ namespace Mots_Meles
                 return "empty cell";
         }
 
-
         /// <summary>
         /// set la valeur d'une cellule
         /// </summary>
@@ -60,7 +59,6 @@ namespace Mots_Meles
             ws.Cells[i, j].Value2 = value;
         }
 
-
         /// <summary>
         /// Sauvegarde le WorkBook
         /// </summary>
@@ -68,7 +66,6 @@ namespace Mots_Meles
         {
             wb.Save();
         }
-
 
         /// <summary>
         /// Sauvegarde Sous le WorkBook
@@ -79,7 +76,6 @@ namespace Mots_Meles
             wb.SaveAs(path);
         }
 
-
         /// <summary>
         /// instancie le WorkBook
         /// </summary>
@@ -87,7 +83,6 @@ namespace Mots_Meles
         {
             this.wb = excel.Workbooks.Add(XlWBATemplate.xlWBATWorksheet); 
         }
-
 
         /// <summary>
         /// Lis les valeurs de d'un seul WorkSheet 
@@ -113,7 +108,6 @@ namespace Mots_Meles
             return returnstring;
         }
 
-
         /// <summary>
         /// Rempli un WorkSheet selon une matrice
         /// On veut selon la difficulté et non une matrice
@@ -126,7 +120,12 @@ namespace Mots_Meles
         public void WriteString(int first_i, int last_i, int first_j, int last_j, char[,] writestring)
         {
             Range range = ws.Range[ws.Cells[first_i, first_j], ws.Cells[last_i, last_j]];
-            range.Value = writestring;
+            range.Value = plateau.Remplissage();
+        }
+
+        public void OpenWorksheet(string filename)
+        {
+            
         }
     }
 }

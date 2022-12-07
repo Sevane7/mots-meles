@@ -12,25 +12,25 @@ namespace Mots_Meles
         private Stopwatch timer;
         private Joueur[] joueurs;
 
-        public Jeu(Stopwatch timer)
+        public Jeu(Stopwatch timer, Joueur[] joueurs)
         {
-            this.timer= timer;
+            this.timer = timer;
+            this.joueurs = joueurs;
         }
         public Stopwatch Timer
         {
             get {return this.timer;}
             set {this.timer = value;}
         }
-
-        public Stopwatch DebutTimer()
+        public void DebutTimer()
         {
-         timer.Start();
+            timer.Start();
         }
         public TimeSpan TempsEcoule()
         {
-         timer.Stop();
+            timer.Stop();
             TimeSpan temps = timer.Elapsed;
-            return TimeSpan;
+            return temps;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Mots_Meles
         static void Main(string[] args)
         {
             Dictionnaire dico = new Dictionnaire("francais", "MotsPossiblesFR.txt");
-            Plateau plateau = new Plateau(1, 7, 8, 8, dico);
+            Plateau plateau = new Plateau(1, 7, 8, dico);
 
             for(int i = 0; i<plateau.MotsATrouver.Count; i++)
             {
