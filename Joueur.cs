@@ -12,8 +12,10 @@ namespace Mots_Meles
         //attributs
         private string nom;
         private List <string> mots_trouves;
-        private int scores;             // score du joueur 
-        private double chrono;          // chrono total du joueur
+        private int scores;
+        private double chrono;
+
+        //Constructeur
         public Joueur(string nom, List <string> mots_trouves, int scores, double chrono)
         {
             this.nom = nom;
@@ -37,12 +39,15 @@ namespace Mots_Meles
         }
 
         /// <summary>
-        /// Proprtiété du score
+        /// Proprtiétés du score en lecture et en écriture
         /// </summary>
         public int Scores
         {
             get { return this.scores; }
-            set { this.scores = value; }
+            set
+            {
+                for(int i = 0; i < mots_trouves.Count; i ++) { this.scores += mots_trouves[0].Length; }
+            }
         }
 
         /// <summary>
@@ -62,7 +67,13 @@ namespace Mots_Meles
         {
             Mots_trouves.Add(mot);
         } 
-        public string ToString()
+
+        /// <summary>
+        /// Retourne un string
+        /// Retourne la liste de mots trouvée par un joueur et son score
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
         {
             string res = this.nom + " a trouvé les mots : ";
             for(int i = 0; i< Mots_trouves.Count; i++)
@@ -73,13 +84,20 @@ namespace Mots_Meles
             res += "\n" + "Son score est de " + Scores;
             return res;
         }
+
+        /// <summary>
+        /// Retourne un entier
+        /// Invrémente le score par une valeur
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
         public int Add_Score(int val)
         {
             return Scores + val;
-        }
+        } //inutile car set Scores
         public double Add_chrono(double val)
         {
             return Chrono + val;
-        }
+        } //pareil
     }   
 }

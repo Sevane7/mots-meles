@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Excel = Microsoft.Office.Interop.Excel;
+﻿using Microsoft.Office.Interop.Excel;
 using Range = Microsoft.Office.Interop.Excel.Range;
-using System.Reflection;
-using Microsoft.Office.Interop.Excel;
 
 namespace Mots_Meles
 {
@@ -15,18 +8,13 @@ namespace Mots_Meles
         string path = "";
         Workbook wb;
         Application excel;
-        Worksheet ws;            
-        private int sheet;       // autant de sheets que de joueur
-        private int difficulty;
+        Worksheet ws;
         Plateau plateau;
-        public Excel(string path, Application excel, Workbook wb, Worksheet ws, int sheet, int difficulty, Plateau plateau)
+        public Excel(string path, int Sheet)
         {
             this.path = path;
-            this.excel = excel;
             wb = excel.Workbooks.Open(path);
-            ws = excel.Worksheets[sheet];
-            this.difficulty = difficulty;   
-            this.plateau = plateau;
+            ws = excel.Worksheets[Sheet];
         }
 
 
@@ -81,7 +69,7 @@ namespace Mots_Meles
         /// </summary>
         public void CreateNewFile()
         {
-            this.wb = excel.Workbooks.Add(XlWBATemplate.xlWBATWorksheet); 
+            this.wb = excel.Workbooks.Add(XlWBATemplate.xlWBATWorksheet);
         }
 
         /// <summary>
@@ -93,14 +81,14 @@ namespace Mots_Meles
         /// <param name="first_j"></param>
         /// <param name="last_j"></param>
         /// <returns></returns>
-        public string [,] ReadRange(int first_i, int last_i, int first_j, int last_j)
+        public string[,] ReadRange(int first_i, int last_i, int first_j, int last_j)
         {
             Range range = (Range)ws.Range[ws.Cells[first_i, first_j], ws.Cells[last_i, last_j]];  // instancie un range (tableau Excel)
-            string [,] interm = range.Value;
-            string [,] returnstring = new string[last_i - first_i + 1, last_j - first_j + 1];
-            for(int i = 1; i<=last_i - first_i; i++)
+            string[,] interm = range.Value;
+            string[,] returnstring = new string[last_i - first_i + 1, last_j - first_j + 1];
+            for (int i = 1; i <= last_i - first_i; i++)
             {
-                for(int j = 1; j<=last_j - first_j; j++)
+                for (int j = 1; j <= last_j - first_j; j++)
                 {
                     returnstring[i - 1, j - 1] = interm[i, j].ToString();
                 }
@@ -117,15 +105,11 @@ namespace Mots_Meles
         /// <param name="first_j"></param>
         /// <param name="last_j"></param>
         /// <param name="writestring"></param>
-        public void WriteString(int first_i, int last_i, int first_j, int last_j, char[,] writestring)
+        public void WriteString(int first_i, int last_i, int first_j, int last_j)
         {
             Range range = ws.Range[ws.Cells[first_i, first_j], ws.Cells[last_i, last_j]];
             range.Value = plateau.Remplissage();
         }
 
-        public void OpenWorksheet(string filename)
-        {
-            
-        }
     }
 }
