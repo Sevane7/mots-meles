@@ -15,7 +15,7 @@ namespace Mots_Meles
         {
             Dictionnaire dico = new Dictionnaire("francais", "MotsPossiblesFR.txt");
 
-            int difficult = 2;
+            int difficult = 3;
             int lignes = (difficult - 1) + 9;
              
             Plateau plateau = new Plateau(difficult, lignes, lignes, dico);
