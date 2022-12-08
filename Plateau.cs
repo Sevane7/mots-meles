@@ -83,7 +83,7 @@ namespace Mots_Meles
                     }
                     if(Difficult == 3 || Difficult == 4)
                     {
-                        int tabMot = r.Next(2, Ligne - 1);
+                        int tabMot = r.Next(2, Math.Min(Ligne - 2, 14));
                         int index = r.Next(0, Dico.Mots[tabMot].Length);
                         WordsToFind.Add(Dico.Mots[tabMot][index]);
                     }                    
@@ -183,7 +183,7 @@ namespace Mots_Meles
             }
 
             //Si le mot peut être placé vers le Sud-Ouest
-            if(direction == 5 && word.Length < Math.Min(Ligne - x + 1, Colonne - y + 1))
+            if(direction == 5 && word.Length < Math.Min(Ligne - x + 1, y + 1))
             {
                 for(int i = 0; i < word.Length;i++)
                 {
@@ -203,7 +203,7 @@ namespace Mots_Meles
             }
 
             //Si le mot peut être placé vers le Sud-Est
-            if (direction == 7 && word.Length < Math.Max(Ligne - x + 1, y + 1))
+            if (direction == 7 && word.Length < Math.Min(Ligne - x + 1,Colonne - y + 1))
             {
                 for (int i = 0; i < word.Length; i++)
                 {
@@ -231,173 +231,174 @@ namespace Mots_Meles
             {
                 case 1:
                 {
-                            while(counter < MotsATrouver.Count)
+                    while(counter < MotsATrouver.Count)
+                    {
+                        int itteration = 0;
+                        string word = MotsATrouver[counter];
+                        int direction = r.Next(0, 2); //2 directions : (E,S):(0,1)
+                        int x = r.Next(0, Ligne);
+                        int y = r.Next(0, Colonne);
+                        if (PointDAncrage(word, direction, x, y, plateau))
+                        {
+                            for (int i = 0; i < word.Length; i++)
                             {
-                                int itteration = 0;
-                                string word = MotsATrouver[counter];
-                                int direction = r.Next(0, 2); //2 directions : (E,S):(0,1)
-                                int x = r.Next(0, Ligne);
-                                int y = r.Next(0, Colonne);
-                                if (PointDAncrage(word, direction, x, y, plateau))
-                                {
-                                    for (int i = 0; i < word.Length; i++)
-                                    {
-                                        //condition ? 
-                                        //(direction == 0) ? plateau[x, y + i] = word[i] : plateau[x + i, y] = word[i];
+                                //condition ? 
+                                //(direction == 0) ? plateau[x, y + i] = word[i] : plateau[x + i, y] = word[i];
 
-                                        if (direction == 0) { plateau[x, y + i] = word[i]; } //rempli une ligne du plateau
-                                        else { plateau[x + i, y] = word[i]; }                //rempli une colonne du plateau
-                                    }
-                                    counter++;
-                                }
-                                itteration++;
-                                if(itteration > 10000)
-                                {
-                                    plateau = CreationMatrice();
-                                    counter= 0;
-                                }
-                            }                    
-                            break;
+                                if (direction == 0) { plateau[x, y + i] = word[i]; } //rempli une ligne du plateau
+                                else { plateau[x + i, y] = word[i]; }                //rempli une colonne du plateau
+                            }
+                            counter++;
                         }
+                        itteration++;
+                        if(itteration > 10000)
+                        {
+                            plateau = CreationMatrice();
+                            counter= 0;
+                        }
+                    }                    
+                    break;
+                }
                 case 2:
                 {
-                            while(counter < MotsATrouver.Count)
+                    while(counter < MotsATrouver.Count)
+                    {
+                        int itteration = 0;
+                        string word = MotsATrouver[counter];
+                        int direction = r.Next(0, 4); //4 directions : (E,S,O,N) : (0,1,2,3)
+                        int x = r.Next(0, Ligne);
+                        int y = r.Next(0, Colonne);
+                        if(PointDAncrage(word, direction, x, y, plateau))
+                        {
+                            for(int i = 0; i < word.Length; i++)
                             {
-                                int itteration = 0;
-                                string word = MotsATrouver[counter];
-                                int direction = r.Next(0, 4); //4 directions : (E,S,O,N) : (0,1,2,3)
-                                int x = r.Next(0, Ligne);
-                                int y = r.Next(0, Colonne);
-                                if(PointDAncrage(word, direction, x, y, plateau))
+                                switch (direction)
                                 {
-                                    for(int i = 0; i < word.Length; i++)
-                                    {
-                                        switch (direction)
-                                        {
-                                            case 0:
-                                                plateau[x, y + i] = word[i];
-                                                break;
+                                    case 0:
+                                        plateau[x, y + i] = word[i];
+                                        break;
 
-                                            case 1:
-                                                plateau[x + i, y] = word[i];
-                                                break;
-                                            case 2:
-                                                plateau[x, y - i] = word[i];
-                                                break;
-                                            case 3:
-                                                plateau[x - i, y] = word[i];
-                                                break;
-                                        }
-                                    }
-                                    counter ++;
-                                }
-                                itteration++;
-                                if (itteration > 10000)
-                                {
-                                    plateau = CreationMatrice();
-                                    counter = 0;
+                                    case 1:
+                                        plateau[x + i, y] = word[i];
+                                        break;
+                                    case 2:
+                                        plateau[x, y - i] = word[i];
+                                        break;
+                                    case 3:
+                                        plateau[x - i, y] = word[i];
+                                        break;
                                 }
                             }
-                            break;
+                            counter ++;
                         }
+                        itteration++;
+                        if (itteration > 10000)
+                        {
+                            plateau = CreationMatrice();
+                            counter = 0;
+                        }
+                    }
+                    break;
+                }
                 case 3:
                 {
-                            while (counter < MotsATrouver.Count)
+                    while (counter < MotsATrouver.Count)
+                    {
+                        int itteration = 0;
+                        string word = MotsATrouver[counter];
+                        int direction = r.Next(0, 6); //6 directions : (E,S,O,N,N-E,S-O) : (0,1,2,3,4,5)
+                        int x = r.Next(0, Ligne);
+                        int y = r.Next(0, Colonne);
+                        if (PointDAncrage(word, direction, x, y, plateau))
+                        {
+                            for (int i = 0; i < word.Length; i++)
                             {
-                                int itteration = 0;
-                                string word = MotsATrouver[counter];
-                                int direction = r.Next(0, 6); //6 directions : (E,S,O,N,N-E,S-O) : (0,1,2,3,4,5)
-                                int x = r.Next(0, Ligne);
-                                int y = r.Next(0, Colonne);
-                                if (PointDAncrage(word, direction, x, y, plateau))
+                                switch (direction)
                                 {
-                                    for (int i = 0; i < word.Length; i++)
-                                    {
-                                        switch (direction)
-                                        {
-                                            case 0:
-                                                plateau[x, y + i] = word[i];
-                                                break;
-                                            case 1:
-                                                plateau[x + i, y] = word[i];
-                                                break;
-                                            case 2:
-                                                plateau[x, y - i] = word[i];
-                                                break;
-                                            case 3:
-                                                plateau[x - i, y] = word[i];
-                                                break;
-                                            case 4:
-                                                plateau[x - i, y + i] = word[i];
-                                                break;
-                                            case 5:
-                                                plateau[x + i, y - i] = word[i];
-                                                break;
-                                        }
-                                    }
-                                    counter++;
-                                }
-                                itteration++;
-                                if (itteration > 10000)
-                                {
-                                    plateau = CreationMatrice();
-                                    counter = 0;
+                                    case 0:
+                                        plateau[x, y + i] = word[i];
+                                        break;
+                                    case 1:
+                                        plateau[x + i, y] = word[i];
+                                        break;
+                                    case 2:
+                                        plateau[x, y - i] = word[i];
+                                        break;
+                                    case 3:
+                                        plateau[x - i, y] = word[i];
+                                        break;
+                                    case 4:
+                                        plateau[x - i, y + i] = word[i];
+                                        break;
+                                    case 5:
+                                        plateau[x + i, y - i] = word[i];
+                                        break;
                                 }
                             }
-                            break;
+                            counter++;
                         }
+                        itteration++;
+                        if (itteration > 10000)
+                        {
+                            plateau = CreationMatrice();
+                            counter = 0;
+                        }
+                    }
+                    break;
+                }
                 case 4:
                 {
-                            while (counter < MotsATrouver.Count)
+                     while (counter < MotsATrouver.Count)
+                     {
+                        int itteration = 0;
+                        string word = MotsATrouver[counter];
+                        int direction = r.Next(0, 8); //8 directions : (E,S,O,N,N-E,S-O,N-O,S-E) : (0,1,2,3,4,5,6,7)
+                        int x = r.Next(0, Ligne);
+                        int y = r.Next(0, Colonne);
+                        if (PointDAncrage(word, direction, x, y, plateau))
+                        {
+                        Console.Write(x + " " + y + " " + direction + "\n");
+                            for (int i = 0; i < word.Length; i++)
                             {
-                                int itteration = 0;
-                                string word = MotsATrouver[counter];
-                                int direction = r.Next(0, 8); //8 directions : (E,S,O,N,N-E,S-O,N-O,S-E) : (0,1,2,3,4,5,6,7)
-                                int x = r.Next(0, Ligne);
-                                int y = r.Next(0, Colonne);
-                                if (PointDAncrage(word, direction, x, y, plateau))
+                                switch (direction)
                                 {
-                                    for (int i = 0; i < word.Length; i++)
-                                    {
-                                        switch (direction)
-                                        {
-                                            case 0:
-                                                plateau[x, y + i] = word[i];
-                                                break;
-                                            case 1:
-                                                plateau[x + i, y] = word[i];
-                                                break;
-                                            case 2:
-                                                plateau[x, y - i] = word[i];
-                                                break;
-                                            case 3:
-                                                plateau[x - i, y] = word[i];
-                                                break;
-                                            case 4:
-                                                plateau[x - i, y + i] = word[i];
-                                                break;
-                                            case 5:
-                                                plateau[x + i, y - i] = word[i];
-                                                break;
-                                            case 6:
-                                                plateau[x - i, y - i] = word[i];
-                                                break;
-                                            case 7:
-                                                plateau[x + i, y + i] = word[i];
-                                                break;
-                                        }
-                                    }
-                                    counter++;
-                                }
-                                itteration++;
-                                if (itteration > 10000)
-                                {
-                                    plateau = CreationMatrice();
-                                    counter = 0;
+                                    case 0:
+                                        plateau[x, y + i] = word[i];
+                                        break;
+                                    case 1:
+                                        plateau[x + i, y] = word[i];
+                                        break;
+                                    case 2:
+                                        plateau[x, y - i] = word[i];
+                                        break;
+                                    case 3:
+                                        plateau[x - i, y] = word[i];
+                                        break;
+                                    case 4:
+                                        plateau[x - i, y + i] = word[i];
+                                        break;
+                                    case 5:
+                                        plateau[x + i, y - i] = word[i];
+                                        break;
+                                    case 6:
+                                        plateau[x - i, y - i] = word[i];
+                                        break;
+                                    case 7:
+                                        plateau[x + i, y + i] = word[i];
+                                        break;
                                 }
                             }
-                            break;
+                            counter++;
                         }
+                        itteration++;
+                        if (itteration > 10000)
+                        {
+                            plateau = CreationMatrice();
+                            counter = 0;
+                        }
+                     }
+                     break;
+                }
             }
             return plateau;
         }
