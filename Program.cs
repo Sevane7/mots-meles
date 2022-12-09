@@ -12,13 +12,9 @@ namespace Mots_Meles
     {
         static Joueur InitialisationJoueur()
         {
-            Joueur joueur = null;
             Console.WriteLine("Entrez le nom du joueur 1 :");
-            joueur.Nom = Console.ReadLine();
-            joueur.Scores = 0;
-            TimeSpan timer = TimeSpan.FromSeconds(0);
-            joueur.Chrono = timer;
-            joueur.Mots_trouves = new List <string> {""};
+            string nom_joueur = Console.ReadLine();
+            Joueur joueur = new Joueur(nom_joueur);
             return joueur;
         }
         static void Main(string[] args)
@@ -32,6 +28,14 @@ namespace Mots_Meles
             int lignes = (difficult - 1) * 5 + 9;
              
             Plateau plateau = new Plateau(difficult, lignes, lignes, dico);
+
+            Jeu mot_meles = new Jeu(joueur_1, joueur_2, plateau, 2);
+
+            while(difficult < 5)
+            {
+                mot_meles.TourSuivant();
+                difficult++;
+            }
 
 
             //test plateau

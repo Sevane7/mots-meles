@@ -13,15 +13,15 @@ namespace Mots_Meles
         private string nom;
         private List <string> mots_trouves;
         private int scores;
-        private TimeSpan chrono;
+        private long chrono;
 
         //Constructeur
-        public Joueur(string nom, List <string> mots_trouves, int scores, TimeSpan chrono)
+        public Joueur(string nom)
         {
             this.nom = nom;
-            this.mots_trouves = mots_trouves;
-            this.scores = scores;
-            this.chrono = chrono;
+            this.mots_trouves = null;
+            this.scores = 0;
+            this.chrono = 0;
         }
 
         /// <summary>
@@ -48,16 +48,13 @@ namespace Mots_Meles
         public int Scores
         {
             get { return this.scores; }
-            set
-            {
-                for(int i = 0; i < mots_trouves.Count; i ++) { this.scores += mots_trouves[0].Length; }
-            }
+            set { this.scores = value; }
         }
 
         /// <summary>
         /// Proprtiété du chrono
         /// </summary>
-        public TimeSpan Chrono
+        public long Chrono
         {
             get { return this.chrono; }
             set { this.chrono = value; }
@@ -90,19 +87,22 @@ namespace Mots_Meles
         }
 
         /// <summary>
-        /// Retourne un entier
-        /// Invrémente le score par une valeur
+        /// Incrémente le score par une valeur
         /// </summary>
         /// <param name="val"></param>
         /// <returns></returns>
-        public int Add_Score(int val)
+        public void Add_Score(int val)
         {
-            return Scores + val;
-        } //inutile car set Scores
-        public TimeSpan Add_chrono(TimeSpan val)
-        {
-            return Chrono + val;
+            Scores += val;
+        } 
 
-        } //pareil
+        /// <summary>
+        /// Incrémente le chrono par un TimeSpan
+        /// </summary>
+        /// <param name="val"></param>
+        public void Add_chrono(long val)
+        {
+            Chrono += val;
+        }
     }   
 }
