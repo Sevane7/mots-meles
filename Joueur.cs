@@ -13,10 +13,10 @@ namespace Mots_Meles
         private string nom;
         private List <string> mots_trouves;
         private int scores;
-        private double chrono;
+        private TimeSpan chrono;
 
         //Constructeur
-        public Joueur(string nom, List <string> mots_trouves, int scores, double chrono)
+        public Joueur(string nom, List <string> mots_trouves, int scores, TimeSpan chrono)
         {
             this.nom = nom;
             this.mots_trouves = mots_trouves;
@@ -27,7 +27,11 @@ namespace Mots_Meles
         /// <summary>
         /// Proprtiété du nom
         /// </summary>
-        public string Nom { get { return nom; } }
+        public string Nom
+        {
+            get { return nom; }
+            set { nom = value; }
+        }
 
         /// <summary>
         /// Proprtiété des mots trouvés
@@ -53,7 +57,7 @@ namespace Mots_Meles
         /// <summary>
         /// Proprtiété du chrono
         /// </summary>
-        public double Chrono
+        public TimeSpan Chrono
         {
             get { return this.chrono; }
             set { this.chrono = value; }
@@ -95,9 +99,10 @@ namespace Mots_Meles
         {
             return Scores + val;
         } //inutile car set Scores
-        public double Add_chrono(double val)
+        public TimeSpan Add_chrono(TimeSpan val)
         {
             return Chrono + val;
+
         } //pareil
     }   
 }

@@ -4,18 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Mots_Meles
 {
     internal class Jeu
     {
         private Stopwatch timer;
-        private Joueur[] joueurs;
+        private Joueur joueur1;
+        private Joueur joueur2;
+        private Plateau plateau;
 
-        public Jeu(Stopwatch timer)
+        public Jeu(Stopwatch timer, Joueur joueur1, Joueur joueur2, Plateau plateau)
         {
             this.timer = timer;
-            this.joueurs = InitialisationJoueur();
+            this.joueur1 = joueur1;
+            this.joueur2 = joueur2;
+            this.plateau = plateau;
         }
         public Stopwatch Timer
         {
@@ -26,51 +31,51 @@ namespace Mots_Meles
         {
             timer.Start();
         }
-        public TimeSpan TempsEcoule()
+        public void FinTimer()
         {
             timer.Stop();
-            TimeSpan temps = timer.Elapsed;
-            return temps;
         }
-        public Joueur[] InitialisationJoueur()
+
+        /// <summary>
+        /// Retourne une TimeSpan
+        /// Prend un Joueur en argument
+        /// Retourne le temps de  jeu pour un joueur
+        /// </summary>
+        /// <param name="joueur"></param>
+        /// <returns></returns>
+        public TimeSpan TempsDeJeu(Joueur joueur)
         {
-            Joueur[] joueurs = new Joueur{joueur1,joueur2};
-            Console.WriteLine("Entrez le nom du joueur 1 :");
-            joueur1.Nom=Console.ReadLine();
-            Console.WriteLine("Entrez le nom du joueur 2 :");
-            joueur2.Nom=Console.ReadLine();
-            joueur1.Scores=0;
-            joueur2.Scores=0;
-            joueur1.chrono=0.0;
-            joueur2.chrono=0.0;
-            joueur1.Mots_trouves = List<>;
-            joueur2.Mots_trouves = List<>;
-            return joueurs;
+            TimeSpan temps;
+            timer.Start();
+            temps = timer.Elapsed;
+            return temps;
         }
         public string ResultatPartie()
         {
-            if (joueur1.Scores!=joueur2.Scores)
+            string res = "";
+            if (joueur1.Scores != joueur2.Scores)
             {
-                if (joueur1.Scores>joueur2.Scores)
+                if (joueur1.Scores > joueur2.Scores)
                 {
-                    Console.WriteLine("Le joueur 1: "+joueur1.Nom+" a gagné la partie avec " +joueur2.Scores+" points et un temps cumulé de " +joueur1.Chrono+"secondes.");
+                    res += $"{ joueur1.Nom } a gagné la partie avec {joueur1.Scores} points";
                 }
                 else
                 {
-                    Console.WriteLine("Le joueur 2: "+joueur2.Nom+" a gagné la partie avec " +joueurs.Scores+ " points et un temps cumulé de "+joueur2.Chrono+"secondes.");
+                    res += $"{joueur2.Nom} a gagné la partie avec {joueur2.Scores} points";
                 }
             }
             else
             {
-                if (joueur1.Chrono<joueur2.Chrono)
+                if (joueur1.Chrono < joueur2.Chrono)
                 {
-                    Console.WriteLine("Le joueur 1: "+joueur1.Nom+" a gagné la partie avec un score de " +joueur1.Scores+" points comme son adversaire, mais un meilleur temps cumulé, "+joueur1.Chrono+" secondes.");
+                    res += $"{ joueur1.Nom} a gagné la partie avec un chrono de {joueur1.Chrono}";
                 }
                 else
                 {
-                    Console.WriteLine("Le joueur 2: "+joueur2.Nom+" a gagné la partie avec un score de " +joueur2.Scores+ " points comme son adversaire, mais un meilleur temps cumulé: "+joueur2.Chrono+" secondes.");
+                    res += $"{joueur2.Nom} a gagné la partie avec un chrono de {joueur2.Chrono}";
                 }
             }
+            return res;
         }
     }
 }
