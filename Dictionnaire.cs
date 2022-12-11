@@ -36,12 +36,12 @@ namespace Mots_Meles
                  */
                 for (int i = 1; i < lines.Length; i += 2)
                 {
-                    mots[i / 2] = lines[i].Split(' ');
+                    this.mots[i / 2] = lines[i].Split(' ');
                 }
             }
             catch (IOException e)
             {
-                mots = null;
+                this.mots = null;
                 Console.WriteLine(e.Message);
             }
             catch (Exception e)
@@ -57,9 +57,9 @@ namespace Mots_Meles
         public int NombreMots()
         {
             int n = 0;
-            for (int i = 0; i < mots.Length; i++)
+            for (int i = 0; i < this.mots.Length; i++)
             {
-                n += mots[i].Length;        // n est incrémenter de tous la taille de tous les tableaux[i]
+                n += this.mots[i].Length;        //A n est ajouté la taille de tous les tableaux[i]
             }
             return n;
         }
@@ -79,21 +79,17 @@ namespace Mots_Meles
         public string Langue { get { return this.langue; } }   
 
         /// <summary>
-        /// Propriétés en lecture et en écriture
+        /// Propriétés en lecture du [][]mots
         /// </summary>
-        public string[][] Mots 
-        { 
-            get { return mots; }
-            set { mots = value; }
-        }
+        public string[][] Mots { get { return this.mots; } }
 
         /// <summary>
-        ///Retourne le nombre de mots par longueur en français.
+        ///Retourne le nombre de mots par longueur.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            string res = "En français : \n";
+            string res = $"En {this.langue} : \n";
             for(int i = 0; i < this.mots.Length; i++)
             {
                 res += $"Il y a {this.mots[i].Length} mots de taille {i + 2}. \n";
@@ -124,8 +120,14 @@ namespace Mots_Meles
         public bool RechDichRecursif(string mot, int index_deb, int index_fin, int milieu)
         {
             int len = milieu + (index_fin - index_deb) / 2;
-            if (len >= index_fin) { return false; }                                                        // le mots n'est pas dans tab
-            if (this.mots[mot.Length - 2][len] == mot) { return true; }                                                          //condition d'arrêt si mot est dans le tableau 
+
+            // le mots n'est pas dans tab
+            if (len >= index_fin) { return false; }
+
+            //condition d'arrêt si mot est dans le tableau 
+            if (this.mots[mot.Length - 2][len] == mot) { return true; }
+
+            //Recusrivité
             if (mot.CompareTo(this.mots[mot.Length - 2][len]) < 0) { return RechDichRecursif(mot, index_deb, len, len); }
             else { return RechDichRecursif(mot, len + 1, index_fin, len + 1); }
         }

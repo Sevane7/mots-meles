@@ -108,7 +108,7 @@ namespace Mots_Meles
         public void WriteString(int first_i, int last_i, int first_j, int last_j)
         {
             Range range = ws.Range[ws.Cells[first_i, first_j], ws.Cells[last_i, last_j]];
-            range.Value = plateau.Remplissage();
+            range.Value = plateau.Grille;
         }
 
     }

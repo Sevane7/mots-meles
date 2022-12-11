@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Timers;
 
 namespace Mots_Meles
 {
@@ -23,8 +21,15 @@ namespace Mots_Meles
             this.tempsDeJeu = tempsDeJeu;
         }
 
-        //methode qui verifie que le mot existe dans la direction
-        //methode qui dait passer au 2eme tour
+        /// <summary>
+        /// Renvoie un bool
+        /// Verifie qu'un mot dans une certaine direction à un certain point est dans la grille
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="direction"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public bool VerifMot(string word, int direction, int x, int y)
         {
             bool verif = false;
@@ -43,7 +48,7 @@ namespace Mots_Meles
                 {
                     for (int i = 0; i < word.Length; i++)
                     {
-                        if (word[i] == plateau.Remplissage()[x, y + i])
+                        if (word[i] == this.plateau.Grille[x, y + i])
                         {
                             count++;
                         }
@@ -53,7 +58,7 @@ namespace Mots_Meles
                 {
                     for (int i = 0; i < word.Length; i++)
                     {
-                        if (word[i] == plateau.Remplissage()[x + i, y])
+                        if (word[i] == this.plateau.Grille[x + i, y])
                         {
                             count++;
                         }
@@ -66,7 +71,7 @@ namespace Mots_Meles
                 {
                     for (int i = 0; i < word.Length; i++)
                     {
-                        if (word[i] == plateau.Remplissage()[x, y - i])
+                        if (word[i] == this.plateau.Grille[x, y - i])
                         {
                             count++;
                         }
@@ -76,7 +81,7 @@ namespace Mots_Meles
                 {
                     for (int i = 0; i < word.Length; i++)
                     {
-                        if (word[i] == plateau.Remplissage()[x - i, y])
+                        if (word[i] == this.plateau.Grille[x - i, y])
                         {
                             count++;
                         }
@@ -89,7 +94,7 @@ namespace Mots_Meles
                 {
                     for (int i = 0; i < word.Length; i++)
                     {
-                        if (word[i] == plateau.Remplissage()[x - i, y + i])
+                        if (word[i] == this.plateau.Grille[x - i, y + i])
                         {
                             count++;
                         }
@@ -99,7 +104,7 @@ namespace Mots_Meles
                 {
                     for (int i = 0; i < word.Length; i++)
                     {
-                        if (word[i] == plateau.Remplissage()[x + i, y - i])
+                        if (word[i] == this.plateau.Grille[x + i, y - i])
                         {
                             count++;
                         }
@@ -112,7 +117,7 @@ namespace Mots_Meles
                 {
                     for (int i = 0; i < word.Length; i++)
                     {
-                        if (word[i] == plateau.Remplissage()[x - i, y - i])
+                        if (word[i] == this.plateau.Grille[x - i, y - i])
                         {
                             count++;
                         }
@@ -122,7 +127,7 @@ namespace Mots_Meles
                 {
                     for (int i = 0; i < word.Length; i++)
                     {
-                        if (word[i] == plateau.Remplissage()[x + i, y + i])
+                        if (word[i] == this.plateau.Grille[x + i, y + i])
                         {
                             count++;
                         }
@@ -135,6 +140,24 @@ namespace Mots_Meles
             }
             return verif;
         }
+
+        /// <summary>
+        /// Méthode appelée à chaque fois que le chrono s'écoule d'une seconde
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="temps_max"></param>
+        /// <param name="player_i"></param>
+        public void OnTimedEvent(object sender, ElapsedEventArgs e, System.Timers.Timer chrono, Joueur player_i, long temps_max)
+        {
+            player_i.Add_chrono(1);
+            if (player_i.Chrono >= temps_max)
+            { 
+                Console.WriteLine($"{player_i.Nom} tu n'as plus de temps de jeu, rentre ton dernier mot");
+                chrono.Stop();
+            }
+        }
+
         /// <summary>
         /// Prend un joueur en argument
         /// Le fait jouer tant qu'il n'a pas trouvé tous les mots ou que le chrono tourne
@@ -142,30 +165,46 @@ namespace Mots_Meles
         /// <param name="player_i"></param>
         public void Tour(Joueur player_i)
         {
+            // Create a new timer
+            System.Timers.Timer timer = new System.Timers.Timer();
+
+            // Set the interval to 2 seconds (2000 milliseconds)
+            timer.Interval = 1000;
+
+            // Set the event that will be called when the timer elapses
+            timer.Elapsed += (sender, e) => OnTimedEvent(sender, e, timer, player_i, this.tempsDeJeu);
+
+            // Start the timer
+            timer.Start();
+
             List<string> wordPerRound = new List<string>();
 
-            plateau.Affichage(this.plateau.Remplissage());
 
-            while(wordPerRound.Count != plateau.MotsATrouver.Count)
+            while (wordPerRound.Count != plateau.MotsATrouver.Count && timer.Enabled)
             {
+                //demande le mot trouvé par le joeur
                 Console.WriteLine($"{player_i.Nom}, quel mot avez vous trouvez?");
                 string word = Console.ReadLine().ToUpper();
 
+                //demande la direction et vérifie si elle est valide
                 Console.WriteLine("Dans quelle direction?");
                 int direction = 0;
-                switch (plateau.Difficult)
+
+                //vérifie la validité de la direction en fonction de la difficulté
+                switch (this.plateau.Difficult)
                 {
                     case 1:
                         Console.WriteLine("Est = 0 \nSud = 1");
                         direction = Convert.ToInt32(Console.ReadLine());
-                        while(direction > 1 || direction < 0)
+                        while (direction > 1 || direction < 0)
                         {
                             Console.WriteLine("Direction non valide pour cette difficulté, veuillez resaisir une direction.");
                             direction = Convert.ToInt32(Console.ReadLine());
                         }
                         break;
                     case 2:
-                        Console.WriteLine("Est = 0 \n Sud = 1 \n Ouest = 2 \n Nord = 3");
+                        Console.WriteLine("Est = 0 \nSud = 1 \nOuest = 2 \nNord = 3");
+                        
                         direction = Convert.ToInt32(Console.ReadLine());
                         while (direction != 0 || direction != 1 || direction != 2 || direction != 3)
                         {
@@ -174,7 +213,7 @@ namespace Mots_Meles
                         }
                         break;
                     case 3:
-                        Console.WriteLine("Est = 0 \n Sud = 1 \n Ouest = 2 \n Nord = 3 \n Nord-Est = 4 \n Sud-Ouest = 5");
+                        Console.WriteLine("Est = 0 \nSud = 1 \nOuest = 2 \nNord = 3 \nNord-Est = 4 \nSud-Ouest = 5");
                         direction = Convert.ToInt32(Console.ReadLine());
                         while (direction != 0 || direction != 1 || direction != 2 || direction != 3 || direction != 4 || direction != 5)
                         {
@@ -183,7 +222,7 @@ namespace Mots_Meles
                         }
                         break;
                     case 4:
-                        Console.WriteLine("Est = 0 \n Sud = 1 \n Ouest = 2 \n Nord = 3 \n Nord-Est = 4 \n Sud-Ouest = 5 \n Nord-Ouest = 6 \n Sud-Est = 7");
+                        Console.WriteLine("Est = 0 \nSud = 1 \nOuest = 2 \nNord = 3 \nNord-Est = 4 \nSud-Ouest = 5 \nNord-Ouest = 6 \nSud-Est = 7");
                         direction = Convert.ToInt32(Console.ReadLine());
                         while (direction != 0 || direction != 1 || direction != 2 || direction != 3 || direction != 4 || direction != 5 || direction != 6 || direction != 7)
                         {
@@ -193,14 +232,16 @@ namespace Mots_Meles
                         break;
                 }
 
+                //demande la ligne 
                 Console.WriteLine("A quelle ligne?");
                 int x = Convert.ToInt32(Console.ReadLine());
-                while(x >= plateau.Ligne || x < 0)
+                while (x >= plateau.Ligne || x < 0)
                 {
                     Console.WriteLine($"Coordonnées OutOfRange! \nRappel : x_max = {plateau.Ligne - 1}");
                     x = Convert.ToInt32(Console.ReadLine());
                 }
 
+                //demande la colonne
                 Console.WriteLine("A quelle colonne?");
                 int y = Convert.ToInt32(Console.ReadLine());
                 while (y >= plateau.Ligne || y < 0)
@@ -209,11 +250,19 @@ namespace Mots_Meles
                     y = Convert.ToInt32(Console.ReadLine());
                 }
 
-                if (VerifMot(word, direction, x, y)) { wordPerRound.Add(word); }
+                //Verifie que l'ensemble (mot, direction, ligne, colonne) est valide
+                if (VerifMot(word, direction, x, y))
+                {
+                    wordPerRound.Add(word);
+                    Console.WriteLine("Super, tu as trouvé ce mot");
+                }
+                else { Console.WriteLine("Dommage, ce mot n'est pas valide"); }
             }
 
-            int score_supp = 0;
+            timer.Stop();
 
+            int score_supp = 0;
+        
             //Ajoute les mots trouvés pendant le tour à la liste de mots trouvés
             for(int i = 0; i< wordPerRound.Count; i++)
             {
@@ -222,40 +271,7 @@ namespace Mots_Meles
             }
             player_i.Add_Score(score_supp);
 
-            Console.WriteLine($"{player_i}, vous avez trouvé un total de {wordPerRound.Count} mots.\nVotre score est maintenant de {player_i.Scores}");
-        }
-        public void TourSuivant()
-        {
-            Tour(joueur1);
-            Tour(joueur2);
-        }
-        
-        public string ResultatPartie()
-        {
-            string res = "";
-            if (joueur1.Scores != joueur2.Scores)
-            {
-                if (joueur1.Scores > joueur2.Scores)
-                {
-                    res += $"{ joueur1.Nom } a gagné la partie avec {joueur1.Scores} points";
-                }
-                else
-                {
-                    res += $"{joueur2.Nom} a gagné la partie avec {joueur2.Scores} points";
-                }
-            }
-            else
-            {
-                if (joueur1.Chrono < joueur2.Chrono)
-                {
-                    res += $"{ joueur1.Nom} a gagné la partie avec un chrono de {joueur1.Chrono}";
-                }
-                else
-                {
-                    res += $"{joueur2.Nom} a gagné la partie avec un chrono de {joueur2.Chrono}";
-                }
-            }
-            return res;
-        }
+            Console.WriteLine($"{player_i.Nom}, vous avez trouvé un total de {wordPerRound.Count} mots.\nVotre score est maintenant de {player_i.Scores}");               
+        }        
     }
 }

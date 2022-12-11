@@ -14,14 +14,16 @@ namespace Mots_Meles
         private List <string> mots_trouves;
         private int scores;
         private long chrono;
+        private long chrono_total;
 
         //Constructeur
         public Joueur(string nom)
         {
             this.nom = nom;
-            this.mots_trouves = null;
+            this.mots_trouves = new List <string> { };
             this.scores = 0;
             this.chrono = 0;
+            this.chrono_total = 0;
         }
 
         /// <summary>
@@ -61,28 +63,37 @@ namespace Mots_Meles
         }
 
         /// <summary>
+        /// Propriétés en écriture et lecture du chrono total
+        /// </summary>
+        public long Chrono_total
+        {
+            get { return this.chrono_total; }
+            set { this.chrono_total = value;}
+        }
+
+        /// <summary>
         /// Ajoute le mot trouvé à la liste des mots déjà trouvés.
         /// </summary>
         /// <param name="mot"></param>
         public void Add_mot(string mot)
         {
-            Mots_trouves.Add(mot);
-        } 
+            this.mots_trouves.Add(mot);
+        }
 
         /// <summary>
         /// Retourne un string
-        /// Retourne la liste de mots trouvée par un joueur et son score
+        /// Retourne la liste des mots trouvés par un joueur et son score
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            string res = this.nom + " a trouvé les mots : ";
+            string res =$"{this.nom} a trouvé les mots : ";
             for(int i = 0; i< Mots_trouves.Count; i++)
             {
                 if (i == Mots_trouves.Count - 1) { res += Mots_trouves[i] + "."; }
                 else { res += Mots_trouves[i] + ", "; }
             }
-            res += "\n" + "Son score est de " + Scores;
+            res += $"\nSon score est de {this.scores}";
             return res;
         }
 
@@ -93,7 +104,7 @@ namespace Mots_Meles
         /// <returns></returns>
         public void Add_Score(int val)
         {
-            Scores += val;
+            this.scores += val;
         } 
 
         /// <summary>
@@ -102,7 +113,7 @@ namespace Mots_Meles
         /// <param name="val"></param>
         public void Add_chrono(long val)
         {
-            Chrono += val;
+            this.chrono_total += val;
         }
     }   
 }

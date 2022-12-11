@@ -10,33 +10,68 @@ namespace Mots_Meles
 {
     internal class Program
     {
-        static Joueur InitialisationJoueur()
-        {
-            Console.WriteLine("Entrez le nom du joueur 1 :");
-            string nom_joueur = Console.ReadLine();
-            Joueur joueur = new Joueur(nom_joueur);
-            return joueur;
-        }
         static void Main(string[] args)
-        {
-            Dictionnaire dico = new Dictionnaire("francais", "MotsPossiblesFR.txt");
+        {          
+            //Initialise le nom des joeurs
+            //leur score, mots trouvés et chrono sont nulls
+            Console.WriteLine("Entrez le nom du joueur 1 :");
+            Joueur joueur_1 = new Joueur(Console.ReadLine());
+            Console.WriteLine("Entrez le nom du joueur 2 :");
+            Joueur joueur_2 = new Joueur(Console.ReadLine());
 
-            Joueur joueur_1 = InitialisationJoueur();
-            Joueur joueur_2 = InitialisationJoueur();
+            //Initialise le dictionnaire (en anglais ou en français)
+            Dictionnaire dico;
+            Console.WriteLine("Dans quelle langue voulez-vous que les mots soient? \n (F = Francais) \n (A = Anglais)");
+            string lg = Console.ReadLine();
+            if (lg.ToUpper() == "A") { dico = new Dictionnaire("anglais", "MotsPossiblesEN.txt"); }
+            else { dico = new Dictionnaire("francais", "MotsPossiblesFR.txt"); }
 
-            int difficult = 1;
-            int lignes = (difficult - 1) * 5 + 9;
-             
-            Plateau plateau = new Plateau(difficult, lignes, lignes, dico);
+            //initilaise le temps de jeu (en minutes)
+            Console.WriteLine("Combien de minutes pour la première manche? (1 minute sera ajoutée à chaque manche)");
+            long gametime = Convert.ToInt64(Console.ReadLine());
 
-            Jeu mot_meles = new Jeu(joueur_1, joueur_2, plateau, 2);
-
+            //Le jeu commence à la difficulté 1 et s'arrête à la fin de la difficulté 4
+            int difficult = 3;            
             while(difficult < 5)
             {
-                mot_meles.TourSuivant();
+                int lignes = (difficult - 1) * 5 + 9;
+                for(int i = 0; i < 2; i++)
+                {
+                    Plateau plateau = new Plateau(difficult, lignes, lignes, dico);
+                    plateau.Affichage();
+                    Jeu mots_meles = new Jeu(joueur_1, joueur_2, plateau, (gametime + difficult - 1) * 60);
+                    if (i == 0) mots_meles.Tour(joueur_1);
+                    else mots_meles.Tour(joueur_2);
+                }
                 difficult++;
             }
 
+            //Resultat de la partie
+            string res = ""; 
+
+            if (joueur_1.Scores != joueur_2.Scores)
+            {
+                if (joueur_1.Scores > joueur_2.Scores)
+                {
+                    res += $"{joueur_1.Nom} a gagné la partie avec {joueur_1.Scores} points";
+                }
+                else
+                {
+                    res += $"{joueur_2.Nom} a gagné la partie avec {joueur_2.Scores} points";
+                }
+            }
+            else
+            {
+                if (joueur_1.Chrono_total < joueur_2.Chrono_total)
+                {
+                    res += $"{joueur_1.Nom} a gagné la partie avec un chrono de {joueur_1.Chrono_total}";
+                }
+                else
+                {
+                    res += $"{joueur_2.Nom} a gagné la partie avec un chrono de {joueur_2.Chrono_total}";
+                }
+            }
+            Console.WriteLine(res);
 
             //test plateau
             /*for(int i = 0; i<plateau.MotsATrouver.Count; i++)
@@ -63,7 +98,5 @@ namespace Mots_Meles
             Console.WriteLine("Press a key to close the console.");
             Console.ReadKey();
         }
-        
-
     }
 }
