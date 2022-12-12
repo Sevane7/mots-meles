@@ -27,11 +27,11 @@ namespace Mots_Meles
             else { dico = new Dictionnaire("francais", "MotsPossiblesFR.txt"); }
 
             //initilaise le temps de jeu (en minutes)
-            Console.WriteLine("Combien de minutes pour la première manche? (1 minute sera ajoutée à chaque manche)");
+            Console.WriteLine("Combien de secondes pour la première manche? (100 secondes seront ajoutées à chaque manche)");
             long gametime = Convert.ToInt64(Console.ReadLine());
 
             //Le jeu commence à la difficulté 1 et s'arrête à la fin de la difficulté 4
-            int difficult = 3;            
+            int difficult = 1;            
             while(difficult < 5)
             {
                 int lignes = (difficult - 1) * 5 + 9;
@@ -39,16 +39,18 @@ namespace Mots_Meles
                 {
                     Plateau plateau = new Plateau(difficult, lignes, lignes, dico);
                     plateau.Affichage();
-                    Jeu mots_meles = new Jeu(joueur_1, joueur_2, plateau, (gametime + difficult - 1) * 60);
+                    Jeu mots_meles = new Jeu(joueur_1, joueur_2, plateau, (gametime + 100 * (difficult - 1)));
                     if (i == 0) mots_meles.Tour(joueur_1);
                     else mots_meles.Tour(joueur_2);
                 }
                 difficult++;
+                joueur_1.Chrono = 0;
+                joueur_2.Chrono = 0;
             }
 
             //Resultat de la partie
             string res = ""; 
-
+            //En fonction du score
             if (joueur_1.Scores != joueur_2.Scores)
             {
                 if (joueur_1.Scores > joueur_2.Scores)
@@ -60,6 +62,7 @@ namespace Mots_Meles
                     res += $"{joueur_2.Nom} a gagné la partie avec {joueur_2.Scores} points";
                 }
             }
+            //Sinon en fonction du chrono
             else
             {
                 if (joueur_1.Chrono_total < joueur_2.Chrono_total)
@@ -72,6 +75,9 @@ namespace Mots_Meles
                 }
             }
             Console.WriteLine(res);
+
+
+
 
             //test plateau
             /*for(int i = 0; i<plateau.MotsATrouver.Count; i++)

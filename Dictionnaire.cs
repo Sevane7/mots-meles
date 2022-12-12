@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mots_Meles
 {
-    internal class Dictionnaire     //associe un ensemble de mots avec une longueur déterminée & une langue
+    public class Dictionnaire     //associe un ensemble de mots avec une longueur déterminée & une langue
     {
         private string langue;      // Qui sont dans la langue ...
         private string[][] mots;
@@ -117,8 +117,13 @@ namespace Mots_Meles
         /// <param name="index_fin"></param>
         /// <param name="milieu"></param>
         /// <returns></returns>
-        public bool RechDichRecursif(string mot, int index_deb, int index_fin, int milieu)
+        public bool RechDichRecursif(string mot, int milieu = 0, int index_deb = - 1, int index_fin = 0)
         {
+            if(index_deb == -1)
+            {
+                index_fin = this.mots[mot.Length - 2].Length - 1;
+            }
+
             int len = milieu + (index_fin - index_deb) / 2;
 
             // le mots n'est pas dans tab

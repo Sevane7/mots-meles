@@ -110,6 +110,5 @@ namespace Mots_Meles
             Range range = ws.Range[ws.Cells[first_i, first_j], ws.Cells[last_i, last_j]];
             range.Value = plateau.Grille;
         }
-
     }
 }

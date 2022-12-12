@@ -14,7 +14,7 @@ namespace Mots_Meles
         private List <string> mots_trouves;
         private int scores;
         private long chrono;
-        private long chrono_total;
+        private TimeSpan chrono_total;
 
         //Constructeur
         public Joueur(string nom)
@@ -23,7 +23,7 @@ namespace Mots_Meles
             this.mots_trouves = new List <string> { };
             this.scores = 0;
             this.chrono = 0;
-            this.chrono_total = 0;
+            this.chrono_total = TimeSpan.Zero;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Mots_Meles
         /// <summary>
         /// Propriétés en écriture et lecture du chrono total
         /// </summary>
-        public long Chrono_total
+        public TimeSpan Chrono_total
         {
             get { return this.chrono_total; }
             set { this.chrono_total = value;}
@@ -111,7 +111,7 @@ namespace Mots_Meles
         /// Incrémente le chrono par un TimeSpan
         /// </summary>
         /// <param name="val"></param>
-        public void Add_chrono(long val)
+        public void Add_chrono(TimeSpan val)
         {
             this.chrono_total += val;
         }

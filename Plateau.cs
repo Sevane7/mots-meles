@@ -33,7 +33,7 @@ namespace Mots_Meles
         public Plateau(string filename)
         {
             this.filename = filename;
-            ToRead(filename);
+            ToRead();
         }
 
         /// <summary>
@@ -61,7 +61,11 @@ namespace Mots_Meles
         /// </summary>
         public char[,] Grille { get { return this.plateau; } }
 
-        public void ToRead(string filename)
+        /// <summary>
+        /// Rempli la grille, mots à trouver etc grace à un fichier
+        /// </summary>
+        /// <param name="filename"></param>
+        public void ToRead()
         {
             try
             {
@@ -75,7 +79,7 @@ namespace Mots_Meles
                 this.difficult = Convert.ToInt32(splitligne0[0]);
                 this.ligne = Convert.ToInt32(splitligne0[1]);
                 this.colonne = Convert.ToInt32(splitligne0[2]);
-                this.motsATrouver = new List<string>(Convert.ToInt32(splitligne0[3]));
+                this.motsATrouver = new List<string> (Convert.ToInt32(splitligne0[3]));
 
                 //split la deuxieme ligne en fonction des ;
                 string[] splitline2 = file_lines[1].Split(';');
@@ -90,14 +94,14 @@ namespace Mots_Meles
                 this.plateau = new char[this.ligne, this.colonne];
                 
                 //Rempli this.plateau avec tous les item à partir de la ligne 2 du fichier 
-                for(int i = 2; i < this.ligne; i++)
+                for(int i = 0; i < this.ligne; i++)
                 {
                     //créer un tableau avec toutes les lettres de la i eme ligne
-                    char []splitlinei = file_lines[i].Split(';');
+                    string [] splitlinei = file_lines[i + 2].Split(';');
 
                     for(int j = 0; j < this.colonne; j++)
                     {
-                        this.plateau[i - 2, j] = splitligne0[j];
+                        this.plateau[i - 2, j] = char.Parse(splitligne0[j]);
                     }
                 }
                 
@@ -108,6 +112,9 @@ namespace Mots_Meles
             }
         }
 
+        /// <summary>
+        /// Ecrase la grille dans un fichier
+        /// </summary>
         public void ToFile()
         {
             try
@@ -328,10 +335,10 @@ namespace Mots_Meles
             /// <returns></returns>
         public void RemplissageMotATrouver()
         {
-            //char[,] plateau = CreationMatrice();
             Random r = new Random();
             int counter = 0; 
 
+            //En fonction de la difficulté, la grille sera remplie avec les mots à trouver dans les bonnes directions 
             switch (Difficult)
             {
                 case 1:
@@ -340,7 +347,8 @@ namespace Mots_Meles
                     {
                         int itteration = 0;
                         string word = this.motsATrouver[counter];
-                        int direction = r.Next(0, 2); //2 directions : (E,S):(0,1)
+                        //2 directions : (E,S):(0,1)
+                        int direction = r.Next(0, 2); 
                         int x = r.Next(0, this.ligne);
                         int y = r.Next(0, this.colonne);
                         if (PointDAncrage(word, direction, x, y))
@@ -350,8 +358,10 @@ namespace Mots_Meles
                                 //condition ? 
                                 //(direction == 0) ? plateau[x, y + i] = word[i] : plateau[x + i, y] = word[i];
 
-                                if (direction == 0) {this.plateau[x, y + i] = word[i]; } //rempli une ligne du plateau
-                                else { this.plateau[x + i, y] = word[i]; }                //rempli une colonne du plateau
+                                //mets le mot une ligne du plateau
+                                if (direction == 0) {this.plateau[x, y + i] = word[i]; }
+                                //mets le mot sur une colonne du plateau
+                                else { this.plateau[x + i, y] = word[i]; }                
                             }
                             counter++;
                         }
@@ -370,7 +380,8 @@ namespace Mots_Meles
                     {
                         int itteration = 0;
                         string word = this.motsATrouver[counter];
-                        int direction = r.Next(0, 4); //4 directions : (E,S,O,N) : (0,1,2,3)
+                        //4 directions : (E,S,O,N) : (0,1,2,3)
+                        int direction = r.Next(0, 4);
                         int x = r.Next(0, this.ligne);
                         int y = r.Next(0, this.colonne);
                         if(PointDAncrage(word, direction, x, y))
@@ -411,7 +422,8 @@ namespace Mots_Meles
                     {
                         int itteration = 0;
                         string word = this.motsATrouver[counter];
-                        int direction = r.Next(0, 6); //6 directions : (E,S,O,N,N-E,S-O) : (0,1,2,3,4,5)
+                        //6 directions : (E,S,O,N,N-E,S-O) : (0,1,2,3,4,5)
+                        int direction = r.Next(0, 6); 
                         int x = r.Next(0, this.ligne);
                         int y = r.Next(0, this.colonne);
                         if (PointDAncrage(word, direction, x, y))
@@ -457,7 +469,8 @@ namespace Mots_Meles
                      {
                         int itteration = 0;
                         string word = this.motsATrouver[counter];
-                        int direction = r.Next(0, 8); //8 directions : (E,S,O,N,N-E,S-O,N-O,S-E) : (0,1,2,3,4,5,6,7)
+                        //8 directions : (E,S,O,N,N-E,S-O,N-O,S-E) : (0,1,2,3,4,5,6,7)
+                        int direction = r.Next(0, 8); 
                         int x = r.Next(0, this.ligne);
                         int y = r.Next(0, this.colonne);
                         if (PointDAncrage(word, direction, x, y))
