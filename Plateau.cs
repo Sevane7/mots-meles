@@ -475,7 +475,6 @@ namespace Mots_Meles
                         int y = r.Next(0, this.colonne);
                         if (PointDAncrage(word, direction, x, y))
                         {
-                        Console.Write(x + " " + y + " " + direction + "\n");
                             for (int i = 0; i < word.Length; i++)
                             {
                                 switch (direction)

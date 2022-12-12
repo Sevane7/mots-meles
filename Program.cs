@@ -11,72 +11,22 @@ namespace Mots_Meles
     internal class Program
     {
         static void Main(string[] args)
-        {          
-            //Initialise le nom des joeurs
-            //leur score, mots trouvés et chrono sont nulls
-            Console.WriteLine("Entrez le nom du joueur 1 :");
-            Joueur joueur_1 = new Joueur(Console.ReadLine());
-            Console.WriteLine("Entrez le nom du joueur 2 :");
-            Joueur joueur_2 = new Joueur(Console.ReadLine());
-
-            //Initialise le dictionnaire (en anglais ou en français)
-            Dictionnaire dico;
-            Console.WriteLine("Dans quelle langue voulez-vous que les mots soient? \n (F = Francais) \n (A = Anglais)");
-            string lg = Console.ReadLine();
-            if (lg.ToUpper() == "A") { dico = new Dictionnaire("anglais", "MotsPossiblesEN.txt"); }
-            else { dico = new Dictionnaire("francais", "MotsPossiblesFR.txt"); }
-
-            //initilaise le temps de jeu (en minutes)
-            Console.WriteLine("Combien de secondes pour la première manche? (100 secondes seront ajoutées à chaque manche)");
-            long gametime = Convert.ToInt64(Console.ReadLine());
-
+        {
             //Le jeu commence à la difficulté 1 et s'arrête à la fin de la difficulté 4
-            int difficult = 1;            
-            while(difficult < 5)
+
+            Jeu mot_mele = new Jeu(1);
+            while(mot_mele.Difficult < 5)
             {
-                int lignes = (difficult - 1) * 5 + 9;
-                for(int i = 0; i < 2; i++)
-                {
-                    Plateau plateau = new Plateau(difficult, lignes, lignes, dico);
-                    plateau.Affichage();
-                    Jeu mots_meles = new Jeu(joueur_1, joueur_2, plateau, (gametime + 100 * (difficult - 1)));
-                    if (i == 0) mots_meles.Tour(joueur_1);
-                    else mots_meles.Tour(joueur_2);
-                }
-                difficult++;
-                joueur_1.Chrono = 0;
-                joueur_2.Chrono = 0;
+                //une manche fait jouer les deux joueurs pour chaque difficulté
+                mot_mele.Manche();
+                mot_mele.Difficult++;
+                mot_mele.Joueur1.Chrono = 0;
+                mot_mele.Joueur2.Chrono = 0;
+                mot_mele.TempsDeJeu += 60;
             }
 
-            //Resultat de la partie
-            string res = ""; 
-            //En fonction du score
-            if (joueur_1.Scores != joueur_2.Scores)
-            {
-                if (joueur_1.Scores > joueur_2.Scores)
-                {
-                    res += $"{joueur_1.Nom} a gagné la partie avec {joueur_1.Scores} points";
-                }
-                else
-                {
-                    res += $"{joueur_2.Nom} a gagné la partie avec {joueur_2.Scores} points";
-                }
-            }
-            //Sinon en fonction du chrono
-            else
-            {
-                if (joueur_1.Chrono_total < joueur_2.Chrono_total)
-                {
-                    res += $"{joueur_1.Nom} a gagné la partie avec un chrono de {joueur_1.Chrono_total}";
-                }
-                else
-                {
-                    res += $"{joueur_2.Nom} a gagné la partie avec un chrono de {joueur_2.Chrono_total}";
-                }
-            }
-            Console.WriteLine(res);
-
-
+            mot_mele.ResulstatPartie();
+            
 
 
             //test plateau

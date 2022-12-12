@@ -38,7 +38,7 @@ namespace Mots_Meles
         /// <summary>
         /// Proprtiété des mots trouvés
         /// </summary>
-        public List <string >Mots_trouves
+        public List <string > Mots_trouves
         {
             get { return this.mots_trouves; }
             set { this.mots_trouves = value; } 
